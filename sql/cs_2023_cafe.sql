@@ -1,6 +1,6 @@
 -- MariaDB dump 10.19  Distrib 10.4.28-MariaDB, for Win64 (AMD64)
 --
--- Host: localhost    Database: cs_2023_cafe
+-- Host: localhost    Database: secret
 -- ------------------------------------------------------
 -- Server version	10.4.28-MariaDB
 
