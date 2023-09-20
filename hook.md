@@ -22,7 +22,7 @@ DB_USER="nom_utilisateur"
 DB_PASSWORD="mot_de_passe"
 DUMP_FILE="path/vers/votre/dossier/sql/$DB_NAME.sql"
 
-"$MYSQLDUMP" -u $DB_USER -p $DB_PASSWORD $DB_NAME > $DUMP_FILE
+"$MYSQLDUMP" -u $DB_USER -p$DB_PASSWORD $DB_NAME > $DUMP_FILE
 
 # Ajoutez le dump à la liste des fichiers à commettre
 git add $DUMP_FILE
