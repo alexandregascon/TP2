@@ -37,7 +37,7 @@ CREATE TABLE `categorie` (
 
 LOCK TABLES `categorie` WRITE;
 /*!40000 ALTER TABLE `categorie` DISABLE KEYS */;
-INSERT INTO `categorie` VALUES (10,'Infusion','',0),(11,'Infusion triangle','',0),(12,'Infusion vrac','',0),(15,'Thé triangle','',0),(16,'Thé vrac','',0),(17,'Capsule','',0),(18,'Grain','',0),(19,'Moulu','',0),(20,'Rooibos','',0),(21,'Accompagnements','',0);
+INSERT INTO `categorie` VALUES (10,'Infusion','test',0),(11,'Infusion triangle','',0),(12,'Infusion vrac','',0),(15,'Thé triangle','',0),(16,'Thé vrac','',0),(17,'Capsule','',0),(18,'Grain','',0),(19,'Moulu','',0),(20,'Rooibos','',0),(21,'Accompagnements','',0);
 /*!40000 ALTER TABLE `categorie` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -333,4 +333,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-09-20 14:42:56
+-- Dump completed on 2023-09-20 14:44:15
