@@ -7,6 +7,7 @@
 - => file -> Settings --> Editor --> File Types --> Ignore files and folders --> retirer git
 - Le dossier.git n'étant pas sauvegarder, vous pourrez adapter ce md en le sauvegardant dans votre projet
 
+
 ## Créer un hook de sauvegarde de la base de données
 - Créer un fichier nommé `pre-commit` dans le dossier `.git/hooks`
 - Ajouter le code suivant dans le fichier :
