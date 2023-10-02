@@ -42,6 +42,7 @@ switch ($action) {
                         $_SESSION["idUtilisateur"] = $utilisateur["idUtilisateur"];
                         //error_log("idUtilisateur : " . $_SESSION["idUtilisateur"]);
                         $_SESSION["idCategorie_utilisateur"] = $utilisateur["idCategorie_utilisateur"];
+                        $_SESSION["bAcceptationRGPD"] = $utilisateur["bAcceptationRGPD"];
                         //error_log("idCategorie_utilisateur : " . $_SESSION["idCategorie_utilisateur"]);
                         switch ($utilisateur["idCategorie_utilisateur"]) {
                             case 1:
@@ -49,9 +50,17 @@ switch ($action) {
                                 $Vue->setMenu(new Vue_Menu_Administration($_SESSION["typeConnexionBack"]));
                                 break;
                             case 2:
-                                $_SESSION["typeConnexionBack"] = "utilisateurCafe";
-                                $Vue->setMenu(new Vue_Menu_Administration($_SESSION["typeConnexionBack"]));
-                                break;
+                                if($_SESSION["bAcceptationRGPD"] == 1) {
+                                    $_SESSION["typeConnexionBack"] = "utilisateurCafe";
+
+                                    $Vue->setMenu(new Vue_Menu_Administration($_SESSION["typeConnexionBack"]));
+                                    break;
+                                }else{
+                                    $_SESSION["typeConnexionBack"] = "utilisateurCafe";
+
+                                    include "Controleur_AccepterRGPD.php";
+                                    break;
+                                }
                             case 3:
                                 $_SESSION["typeConnexionBack"] = "entrepriseCliente";
                                 //error_log("idUtilisateur : " . $_SESSION["idUtilisateur"]);
