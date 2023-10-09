@@ -9,6 +9,7 @@ use App\Vue\Vue_Menu_Entreprise_Client;
 use App\Vue\Vue_Entreprise_Gerer_Compte;
 use App\Vue\Vue_Structure_BasDePage;
 use App\Vue\Vue_Structure_Entete;
+use App\Fonctions;
 
 
 $Vue->setEntete(new Vue_Structure_Entete());
@@ -27,11 +28,22 @@ switch ($action) {
         if (password_verify($_REQUEST["AncienPassword"], $entreprise_connectee["motDePasse"])) {
             //on vérifie si le mot de passe de la BDD est le même que celui rentré
             if ($_REQUEST["NouveauPassword"] == $_REQUEST["ConfirmPassword"]) {
-                //Utilisateur_Modifier_motDePasse(  $_SESSION["idEntreprise"], $_REQUEST["NouveauPassword"] );
-                $Vue->setMenu(new Vue_Menu_Entreprise_Client());
-                $Vue->addToCorps(new Vue_Entreprise_Gerer_Compte());
-                // Dans ce cas les mots de passe sont bons, il est donc modifié
-                $Vue->addToCorps(new Vue_AfficherMessage("<label><b>Votre mot de passe a bien été modifié</b></label>"));
+
+                $nbBits = Fonctions\CalculComplexiteMdp($_REQUEST["NouveauPassword"]);
+
+                if($nbBits >= 90){
+                    //Utilisateur_Modifier_motDePasse(  $_SESSION["idEntreprise"], $_REQUEST["NouveauPassword"] );
+                    $Vue->setMenu(new Vue_Menu_Entreprise_Client());
+                    $Vue->addToCorps(new Vue_Entreprise_Gerer_Compte());
+                    // Dans ce cas les mots de passe sont bons, il est donc modifié
+                    $Vue->addToCorps(new Vue_AfficherMessage("<label><b>Votre mot de passe a bien été modifié</b></label>"));
+                }else{
+                    //Utilisateur_Modifier_motDePasse(  $_SESSION["idEntreprise"], $_REQUEST["NouveauPassword"] );
+                    $Vue->setMenu(new Vue_Menu_Entreprise_Client());
+                    $Vue->addToCorps(new Vue_Entreprise_Gerer_Compte());
+                    // Dans ce cas les mots de passe sont bons, il est donc modifié
+                    $Vue->addToCorps(new Vue_AfficherMessage("<label><b>Votre mot de passe ne respecte pas les conditions de validité</b></label>"));
+                }
             } else {
                 $Vue->addToCorps(new Vue_Utilisateur_Changement_MDP());
                 $Vue->addToCorps(new Vue_AfficherMessage("<label><b>Les nouveaux mots de passe ne sont pas identiques</b></label>"));
