@@ -16,6 +16,7 @@ function floatToBinary($num)
     return $binary;
 }
 
+
 $floatNumber = $nbCaracPossible ** $nbLongueurMdp;
 $binaryRepresentation = strlen(floatToBinary($floatNumber));
 
