@@ -11,23 +11,12 @@ function GenereMDP($nbChar) :string{
     return "secret";
 }
 
-function floatToBinary($num):string{
-    $binary = '';
-    $num = $num-1;
-    while ($num > 0) {
-        $bit = $num % 2;
-        $binary = $bit . $binary;
-        $num = ($num - $bit) / 2;
-    }
-    return $binary;
-}
-
 function CalculComplexiteMdp($mdp) :int{
     $alphabetMin = "azertyuiopqsdfghjklmwxcvbn";
     $alphabetMaj = strtoupper($alphabetMin);
     $num = "0123456789";
     $car = "!#$*%?";
-    $carPlus = "!#$*%?&[|]@^µ:/;.,<>°²";
+    $carPlus = "&[|]@^µ§:/;.,<>°²³";
     $contientMin = false;
     $contientMaj = false;
     $contientNum = false;
@@ -37,17 +26,13 @@ function CalculComplexiteMdp($mdp) :int{
     foreach (str_split($mdp) as $cara){
         if(str_contains($alphabetMin,$cara)){
             $contientMin = true;
-        }
-        if(str_contains($alphabetMaj,$cara)){
+        }elseif(str_contains($alphabetMaj,$cara)){
             $contientMaj = true;
-        }
-        if(str_contains($num,$cara)){
+        }elseif(str_contains($num,$cara)){
             $contientNum = true;
-        }
-        if(str_contains($car,$cara)){
+        }elseif(str_contains($car,$cara)){
             $contientCar = true;
-        }
-        if(str_contains($carPlus,$cara)){
+        }else{
             $contientCarPlus = true;
         }
     }
@@ -68,7 +53,6 @@ function CalculComplexiteMdp($mdp) :int{
         $nbCaractere += strlen($carPlus);
     }
 
-    $resultat = $nbCaractere**strlen($mdp);
-    $resultat = strlen(floatToBinary($resultat));
-    return $resultat;
+    $resultat = (log($nbCaractere**strlen($mdp)))/log(2);
+    return $resultat+1;
 }
