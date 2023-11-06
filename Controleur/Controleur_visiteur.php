@@ -1,5 +1,6 @@
 <?php
-
+include "vendor/autoload.php";
+include_once "src/Fonctions/fonctions.php";
 use App\Modele\Modele_Entreprise;
 use App\Modele\Modele_Salarie;
 use App\Modele\Modele_Utilisateur;
@@ -17,7 +18,30 @@ $Vue->setEntete(new Vue_Structure_Entete());
 switch ($action) {
     case "reinitmdpconfirm":
 
-          //comme un qqc qui manque... je dis ça ! je dis rien !
+        $mdp = \App\Fonctions\passgen1(10);
+
+        $modifUser = new Modele_Utilisateur();
+        $user = $modifUser->Utilisateur_Select_ParLogin($_REQUEST["email"]);
+        $modifUser->Utilisateur_Modifier_motDePasse($user["idUtilisateur"], $mdp);
+
+        $mail = new PHPMailer;
+        $mail->CharSet = "UTF-8";
+        $mail->ContentType = "text\html";
+        $mail->isSMTP();
+        $mail->Host = '127.0.0.1';
+        $mail->Port = 1025; //Port non crypté
+        $mail->SMTPAuth = false; //Pas d’authentification
+        $mail->SMTPAutoTLS = false; //Pas de certificat TLS
+        $mail->setFrom('test@labruleriecomtoise.fr', 'admin');
+        $mail->addAddress($_REQUEST["email"], 'Mon client');
+        if ($mail->addReplyTo('test@labruleriecomtoise.fr', 'admin')) {
+            $mail->Subject = 'Objet : Bonjour !';
+            $mail->isHTML(false);
+            $mail->Body = "Suite à votre demande de réinitialisation de mot de passe, nous vous avons envoyé un mot de passe temporaire aléatoire : $mdp";
+            $mail->send();
+        } else {
+            $msg = 'Il doit manquer qqc !';
+        }
 
         $Vue->addToCorps(new Vue_Mail_Confirme());
 

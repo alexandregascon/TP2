@@ -23,4 +23,3 @@ if ($mail->addReplyTo('test@labruleriecomtoise.fr', 'admin')) {
     $msg = 'Il doit manquer qqc !';
 }
 echo $msg;
-?>
