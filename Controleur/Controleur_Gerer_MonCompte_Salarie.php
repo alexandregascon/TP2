@@ -25,7 +25,6 @@ switch ($action) {
         if (password_verify($_REQUEST["AncienPassword"], $salarie["password"])) {
             //on vérifie si le mot de passe de la BDD est le même que celui rentré
             if ($_REQUEST["NouveauPassword"] == $_REQUEST["ConfirmPassword"]) {
-                if ($_REQUEST["NouveauPassword"] == $_REQUEST["ConfirmPassword"]) {
 
                     $nbBits = Fonctions\CalculComplexiteMdp($_REQUEST["NouveauPassword"]);
 
@@ -64,7 +63,6 @@ switch ($action) {
 
                 $Vue->addToCorps(new Vue_Utilisateur_Changement_MDP("<label><b>Vous n'avez pas saisi le bon mot de passe</b></label>", "Gerer_MonCompte_Salarie"));
             }
-        }
         break;
     case "SeDeconnecter":
         //L'utilisateur a cliqué sur "se déconnecter"
