@@ -8,6 +8,7 @@ use App\Vue\Vue_Structure_BasDePage;
 use App\Vue\Vue_Structure_Entete;
 use App\Vue\Vue_Utilisateur_Formulaire;
 use App\Vue\Vue_Utilisateur_Liste;
+use PHPMailer\PHPMailer\PHPMailer;
 
 $Vue->setEntete(new Vue_Structure_Entete());
 
@@ -37,9 +38,33 @@ switch ($action) {
 
         break;
     case "réinitialiserMDPUtilisateur":
-        //Réinitialiser MDP sur la fiche de l'entreprise
+
+        $mdp = \App\Fonctions\passgen1(10);
+
         $Utilisateur = Modele_Utilisateur::Utilisateur_Select_ParId($_REQUEST["idUtilisateur"]);
-        Modele_Utilisateur::Utilisateur_Modifier_motDePasse($_REQUEST["idUtilisateur"], "secret"); //$Utilisateur["idUtilisateur"]
+        Modele_Utilisateur::Utilisateur_ModifierMdp_activer($Utilisateur["idUtilisateur"],1);
+        Modele_Utilisateur::Utilisateur_Modifier_motDePasse($Utilisateur["idUtilisateur"],$mdp);
+
+        $mail = new PHPMailer;
+        $mail->CharSet = "UTF-8";
+        $mail->ContentType = "text\html";
+        $mail->isSMTP();
+        $mail->Host = '127.0.0.1';
+        $mail->Port = 1025; //Port non crypté
+        $mail->SMTPAuth = false; //Pas d’authentification
+        $mail->SMTPAutoTLS = false; //Pas de certificat TLS
+        $mail->setFrom('test@labruleriecomtoise.fr', 'admin');
+        $mail->addAddress($Utilisateur["login"], 'Mon client');
+        if ($mail->addReplyTo('test@labruleriecomtoise.fr', 'admin')) {
+            $mail->Subject = 'Objet : Bonjour !';
+            $mail->isHTML(false);
+            $mail->Body = "Suite à votre demande de réinitialisation de mot de passe, nous vous avons envoyé un mot de passe temporaire aléatoire : $mdp";
+            $mail->send();
+            Modele_Utilisateur::Utilisateur_Modifier_motDePasse($Utilisateur["idUtilisateur"], $mdp);
+            Modele_Utilisateur::Utilisateur_ModifierMdp_activer($Utilisateur["idUtilisateur"],1);
+        } else {
+            $msg = 'Il doit manquer qqc !';
+        }
 
         $listeUtilisateur = Modele_Utilisateur:: Utilisateur_Select_Cafe();
         $Vue->addToCorps(new Vue_Utilisateur_Liste($listeUtilisateur));

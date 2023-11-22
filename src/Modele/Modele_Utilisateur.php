@@ -202,6 +202,33 @@ SET motDePasse = :parammotDePasse ');
 
         return $reponse;
     }
+    static function Utilisateur_ModifierMdp_activer($idUtilisateur, $activer)
 
+    {
+        $connexionPDO = Singleton_ConnexionPDO::getInstance();
+
+        $requetePreparee = $connexionPDO->prepare(
+            'UPDATE `utilisateur` 
+SET `MDPReinit`= :paramactiver
+WHERE idUtilisateur = :paramidUtilisateur');
+        $requetePreparee->bindParam('paramactiver', $activer);
+        $requetePreparee->bindParam('paramidUtilisateur', $idUtilisateur);
+        $reponse = $requetePreparee->execute(); //$reponse boolean sur l'état de la requête
+        return $reponse;
+    }
+    static function Utilisateur_ModifierMdp_desactiver($idUtilisateur, $desactiver)
+
+    {
+        $connexionPDO = Singleton_ConnexionPDO::getInstance();
+
+        $requetePreparee = $connexionPDO->prepare(
+            'UPDATE `utilisateur` 
+SET `MDPReinit`= :paramdesactiver
+WHERE idUtilisateur = :paramidUtilisateur');
+        $requetePreparee->bindParam('paramdesactiver', $desactiver);
+        $requetePreparee->bindParam('paramidUtilisateur', $idUtilisateur);
+        $reponse = $requetePreparee->execute(); //$reponse boolean sur l'état de la requête
+        return $reponse;
+    }
 
 }

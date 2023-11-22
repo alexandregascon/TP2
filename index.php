@@ -52,6 +52,7 @@ switch ($typeConnexion) {
             case "RGPD":
                 include "Controleur/Controleur_Gestion_RGPD.php";
                 break;
+                
         }
     case "administrateurLogiciel":
         switch ($case) {

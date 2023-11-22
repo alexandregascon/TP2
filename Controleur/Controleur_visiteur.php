@@ -16,13 +16,31 @@ use PHPMailer\PHPMailer\PHPMailer;
 $Vue->setEntete(new Vue_Structure_Entete());
 
 switch ($action) {
+    case "choixmdp":
+        if ($_REQUEST["mdp1"]==$_REQUEST["mdp2"]){
+            $nbBits=\App\Fonctions\CalculComplexiteMdp($_REQUEST["mdp2"]);
+            if ($nbBits>90){
+
+                Modele_Utilisateur::Utilisateur_Modifier_motDePasse($_SESSION["idUtilisateur"],$_REQUEST["mdp2"]);
+                Modele_Utilisateur::Utilisateur_ModifierMdp_desactiver($_SESSION["idUtilisateur"],0);
+                $Vue->addToCorps(new Vue_Connexion_Formulaire_client());
+            }else{
+                $msg="Le mot de passe n'a pas la bonne complexité";
+                $Vue->addToCorps(new \App\Vue\Vue_Mail_ChoisirNouveauMdp("",$msg));
+            }
+        }else{
+            $msg="Les mots de passe ne sont pas identiques";
+            $Vue->addToCorps(new \App\Vue\Vue_Mail_ChoisirNouveauMdp("",$msg));
+
+        }
+        break;
     case "reinitmdpconfirm":
 
         $mdp = \App\Fonctions\passgen1(10);
 
         $modifUser = new Modele_Utilisateur();
         $user = $modifUser->Utilisateur_Select_ParLogin($_REQUEST["email"]);
-        $modifUser->Utilisateur_Modifier_motDePasse($user["idUtilisateur"], $mdp);
+
 
         $mail = new PHPMailer;
         $mail->CharSet = "UTF-8";
@@ -39,6 +57,8 @@ switch ($action) {
             $mail->isHTML(false);
             $mail->Body = "Suite à votre demande de réinitialisation de mot de passe, nous vous avons envoyé un mot de passe temporaire aléatoire : $mdp";
             $mail->send();
+            $modifUser->Utilisateur_Modifier_motDePasse($user["idUtilisateur"], $mdp);
+            Modele_Utilisateur::Utilisateur_ModifierMdp_activer($user["idUtilisateur"],1);
         } else {
             $msg = 'Il doit manquer qqc !';
         }
@@ -66,42 +86,49 @@ switch ($action) {
                         //error_log("idUtilisateur : " . $_SESSION["idUtilisateur"]);
                         $_SESSION["acceptationRGPD"]=$utilisateur["bAcceptationRGPD"];
                         $_SESSION["idCategorie_utilisateur"] = $utilisateur["idCategorie_utilisateur"];
+                        switch ($utilisateur["MDPReinit"]){
+                            case 0:
+                                //error_log("idCategorie_utilisateur : " . $_SESSION["idCategorie_utilisateur"]);
+                                switch ($utilisateur["idCategorie_utilisateur"]) {
+                                    case 1:
+                                        $_SESSION["typeConnexionBack"] = "administrateurLogiciel"; //Champ inutile, mais bien pour voir ce qu'il se passe avec des étudiants !
 
-                        //error_log("idCategorie_utilisateur : " . $_SESSION["idCategorie_utilisateur"]);
-                        switch ($utilisateur["idCategorie_utilisateur"]) {
+                                        $Vue->setMenu(new Vue_Menu_Administration($_SESSION["typeConnexionBack"]));
+                                        break;
+                                    case 2:
+
+                                        $_SESSION["typeConnexionBack"] = "utilisateurCafe";
+                                        if ($_SESSION["acceptationRGPD"]==0){
+                                            include "Controleur_Gestion_RGPD.php";
+                                        }else{
+                                            $Vue->setMenu(new Vue_Menu_Administration($_SESSION["typeConnexionBack"]));
+
+                                        }
+                                        break;
+                                    case 3:
+                                        $_SESSION["typeConnexionBack"] = "entrepriseCliente";
+                                        //error_log("idUtilisateur : " . $_SESSION["idUtilisateur"]);
+                                        $_SESSION["idEntreprise"] = Modele_Entreprise::Entreprise_Select_Par_IdUtilisateur($_SESSION["idUtilisateur"])["idEntreprise"];
+                                        include "./Controleur/Controleur_Gerer_Entreprise.php";
+                                        break;
+                                    case 4:
+                                        $_SESSION["typeConnexionBack"] = "salarieEntrepriseCliente";
+                                        $_SESSION["idSalarie"] = $utilisateur["idUtilisateur"];
+                                        $_SESSION["idEntreprise"] = Modele_Salarie::Salarie_Select_byId($_SESSION["idUtilisateur"])["idEntreprise"];
+                                        if ($_SESSION["acceptationRGPD"]==0){
+                                            include "Controleur_Gestion_RGPD.php";
+                                        }else{
+                                            include "./Controleur/Controleur_Catalogue_client.php";
+                                        }
+
+                                        break;
+                                }
+                                break;
                             case 1:
-                                $_SESSION["typeConnexionBack"] = "administrateurLogiciel"; //Champ inutile, mais bien pour voir ce qu'il se passe avec des étudiants !
-
-                                $Vue->setMenu(new Vue_Menu_Administration($_SESSION["typeConnexionBack"]));
-                                break;
-                            case 2:
-
-                                $_SESSION["typeConnexionBack"] = "utilisateurCafe";
-                                if ($_SESSION["acceptationRGPD"]==0){
-                                    include "Controleur_Gestion_RGPD.php";
-                                }else{
-                                    $Vue->setMenu(new Vue_Menu_Administration($_SESSION["typeConnexionBack"]));
-
-                                }
-                                break;
-                            case 3:
-                                $_SESSION["typeConnexionBack"] = "entrepriseCliente";
-                                //error_log("idUtilisateur : " . $_SESSION["idUtilisateur"]);
-                                $_SESSION["idEntreprise"] = Modele_Entreprise::Entreprise_Select_Par_IdUtilisateur($_SESSION["idUtilisateur"])["idEntreprise"];
-                                include "./Controleur/Controleur_Gerer_Entreprise.php";
-                                break;
-                            case 4:
-                                $_SESSION["typeConnexionBack"] = "salarieEntrepriseCliente";
-                                $_SESSION["idSalarie"] = $utilisateur["idUtilisateur"];
-                                $_SESSION["idEntreprise"] = Modele_Salarie::Salarie_Select_byId($_SESSION["idUtilisateur"])["idEntreprise"];
-                                if ($_SESSION["acceptationRGPD"]==0){
-                                    include "Controleur_Gestion_RGPD.php";
-                                }else{
-                                    include "./Controleur/Controleur_Catalogue_client.php";
-                                }
-
+                                $Vue->addToCorps(new \App\Vue\Vue_Mail_ChoisirNouveauMdp("",""));
                                 break;
                         }
+
 
                     } else {//mot de passe pas bon
                         $msgError = "Mot de passe erroné";
