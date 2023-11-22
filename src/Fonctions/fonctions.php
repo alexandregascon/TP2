@@ -66,3 +66,9 @@ function CalculComplexiteMdp($mdp) :int{
         }
         return mb_convert_encoding($pass,"UTF-8");
     }
+
+    function creerJeton(){
+        $octetsAleatoires = openssl_random_pseudo_bytes (256) ;
+        $jeton = sodium_bin2base64($octetsAleatoires, SODIUM_BASE64_VARIANT_ORIGINAL);
+        return $jeton;
+    }

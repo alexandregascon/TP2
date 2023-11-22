@@ -274,6 +274,33 @@ INSERT INTO `salarie` VALUES (296,'nomGerant','prenomGerant','gerant@blogtagscom
 UNLOCK TABLES;
 
 --
+-- Table structure for table `token`
+--
+
+DROP TABLE IF EXISTS `token`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `token` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `valeur` text NOT NULL,
+  `codeAction` int(11) NOT NULL,
+  `idUtilisateur` int(11) NOT NULL,
+  `dateFin` datetime NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `token`
+--
+
+LOCK TABLES `token` WRITE;
+/*!40000 ALTER TABLE `token` DISABLE KEYS */;
+INSERT INTO `token` VALUES (1,'yWT5ML7KrbwzwtbELTjqvPsh8z3eWKQ7uN3V4+omQ3zmn7vZ19NeAyEm85JZCR+4Nb8B28fYUeBqq6cO4lpx936/3eoxq6h8y7A+ktlc1N5iDpJoP5FwhI/0a59b+GavLG5j6nDEMvC4FuAFpgAMcImb8WqTB/o3FGjiAkwhCZyI5Kzx37ehgW9yu1b+AsLnsimmtFqVrKPZUTXaj6K/Nyv2CIco37VGx+gX/LQXPpsMNFJCcr/ofuOq2uR9SIBBugHH2LctWdXGYqLIEHVx8+WKaXHgTcitXUVj1UG6Q4IzMM3aNWdHS92ojrt0LbMEJiq1w/PNFGvwJiNwv9efPQ==',0,671,'0000-00-00 00:00:00'),(2,'dEPzmmWEXzhG5jzqerUU+biRE8AGUDZPsEey6/tVogZgJBFbA90YwpvTLWuH2dFTadMFIXETb3dLSfzDWncFBnCbWSmKT6Xpch0nXwa42Xbw6pF0ATr1MxrMoRyTp0RdZG5njKFyaGNK/MuyXhiXsPO0LdR/4ulEOvFYzEmp8Q89dbYxtSlVDRxoekftY97Z0vNOsQw1bFYagNz93q/OojxBDMN+3YlzCdtOa+yHCdAhD0hsRXY14O5X/XuA34a7x8g/wCGjAOvHYgZlUUHsNohXqPshgPTIXQEqVBi0af94brbZiEJ/CTyql7ZLkJPkdFc4L/nVgO2TYRZVZ+8vnA==',0,671,'0000-00-00 00:00:00'),(3,'hIS+OMB8lEv3DhUno5ICWEztOPXhIso6OSabkP5Y4eVP30vlC3KdqJsAJzCNTdEK2qYuEGhOtgu3rYOSmL4JfXzrENvEYldGyCaofFiAAA/Z+gE7KyS+yVJn/thTaYu2UgAquxip59+B6WKkTiG/+iqe4GkwdL5CBizW0GNxjGO/ncvNwqOPa6XUe0aQfxJXWQu+eaRmOhHJZZAfgX3BifGoqhUzt6Y36IU4k8JXt+gYPC+U0OuOsGGs3dIcBpBsIJsPSGOU56AI6BQ0d+hwey+6OjyU7rHQUZYXtS0ByVuNaosXJAOyuwLtgJXhmmMRUHWpW3N7c7mGAv9dMkchsg==',0,671,'2023-11-22 03:42:27');
+/*!40000 ALTER TABLE `token` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `tva`
 --
 
@@ -337,4 +364,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-11-22 15:05:48
+-- Dump completed on 2023-11-22 15:48:50
