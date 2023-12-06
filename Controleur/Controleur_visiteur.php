@@ -23,6 +23,10 @@ switch ($action) {
 
                 Modele_Utilisateur::Utilisateur_Modifier_motDePasse($_SESSION["idUtilisateur"],$_REQUEST["mdp2"]);
                 Modele_Utilisateur::Utilisateur_ModifierMdp_desactiver($_SESSION["idUtilisateur"],0);
+                if(isset($_SESSION["token"])){
+                    \App\Modele\Modele_jeton::Jeton_modifier_dateFin($_SESSION["token"],new DateTime());
+                    $_SESSION["token"]=null;
+                }
                 $Vue->addToCorps(new Vue_Connexion_Formulaire_client());
             }else{
                 $msg="Le mot de passe n'a pas la bonne complexité";
@@ -92,8 +96,8 @@ switch ($action) {
             $mail->send();
             Modele_Utilisateur::Utilisateur_ModifierMdp_activer($user["idUtilisateur"],1);
             $date = new DateTime();
-            $date = date_modify($date,"- 3 days");
-            $date = $date->format("Y-d-m H:i:s");
+            $date = date_modify($date,"+ 3 days");
+            $date = $date->format("Y-m-d H:i:s");
             \App\Modele\Modele_jeton::Jeton_creer($token,0,$user["idUtilisateur"],$date);
             $_SESSION["token"]=$token;
             $_SESSION["idUtilisateur"]=$user["idUtilisateur"];
@@ -108,7 +112,7 @@ switch ($action) {
     case "reinitByToken":
         $token = \App\Modele\Modele_jeton::Jeton_recuperer_parToken($_SESSION["token"]);
         $dateFin = \App\Modele\Modele_jeton::Jeton_recuperer_dateFin_parToken($_SESSION["token"]);
-        if(isset($token)and $dateFin>new DateTime()){
+        if(isset($token)){
             $Vue->addToCorps(new \App\Vue\Vue_Mail_ChoisirNouveauMdp($_SESSION["token"],""));
         }else{
             echo "Erreur de Token";

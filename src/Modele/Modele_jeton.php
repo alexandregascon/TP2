@@ -53,7 +53,8 @@ class Modele_jeton
         $requetePreparee = $connexionPDO->prepare(
             'SELECT *
                     FROM `token`
-                    WHERE `valeur`=:valeur;');
+                    WHERE `valeur`=:valeur
+                    AND `dateFin` > NOW();');
 
         $requetePreparee->bindParam('valeur', $token);
         $requetePreparee->execute(); //$reponse boolean sur l'état de la requête
@@ -76,18 +77,17 @@ class Modele_jeton
         return $tokens;
     }
 
-    static function Jeton_modifier_codeAction(int $id, int $codeAction)
+    static function Jeton_modifier_dateFin(string $valeur, \DateTime $dateFin)
     {
         $connexionPDO = Singleton_ConnexionPDO::getInstance();
 
         $requetePreparee = $connexionPDO->prepare(
             'UPDATE `token`
-                    SET codeAction = :codeAction
-                    WHERE id = :id');
+                    SET dateFin = NOW()
+                    WHERE valeur = :valeur');
 
 
-        $requetePreparee->bindParam('id', $id);
-        $requetePreparee->bindParam('codeAction', $codeAction);
+        $requetePreparee->bindParam('valeur', $valeur);
         $requetePreparee->execute(); //$reponse boolean sur l'état de la requête
     }
 }
