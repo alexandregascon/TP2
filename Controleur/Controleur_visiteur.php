@@ -66,6 +66,55 @@ switch ($action) {
         $Vue->addToCorps(new Vue_Mail_Confirme());
 
         break;
+
+    case "reinitmdpconfirmtoken":
+
+        $token = \App\Fonctions\creerJeton();
+
+        $modifUser = new Modele_Utilisateur();
+        $user = $modifUser->Utilisateur_Select_ParLogin($_REQUEST["email"]);
+
+
+        $mail = new PHPMailer;
+        $mail->CharSet = "UTF-8";
+        $mail->ContentType = "text\html";
+        $mail->isSMTP();
+        $mail->Host = '127.0.0.1';
+        $mail->Port = 1025; //Port non crypté
+        $mail->SMTPAuth = false; //Pas d’authentification
+        $mail->SMTPAutoTLS = false; //Pas de certificat TLS
+        $mail->setFrom('test@labruleriecomtoise.fr', 'admin');
+        $mail->addAddress($_REQUEST["email"], 'Mon client');
+        if ($mail->addReplyTo('test@labruleriecomtoise.fr', 'admin')) {
+            $mail->Subject = 'Objet : Bonjour !';
+            $mail->isHTML(true);
+            $mail->Body = "Suite à votre demande de réinitialisation de mot de passe, nous vous avons envoyé un lien pour réinitiliser votre mot de passe : <a href='http://localhost:8000/index.php?action=reinitByToken&token=$token'>Lien à cliquer</a>";
+            $mail->send();
+            Modele_Utilisateur::Utilisateur_ModifierMdp_activer($user["idUtilisateur"],1);
+            $date = new DateTime();
+            $date = date_modify($date,"- 3 days");
+            $date = $date->format("Y-d-m H:i:s");
+            \App\Modele\Modele_jeton::Jeton_creer($token,0,$user["idUtilisateur"],$date);
+            $_SESSION["token"]=$token;
+            $_SESSION["idUtilisateur"]=$user["idUtilisateur"];
+        } else {
+            $msg = 'Il doit manquer qqc !';
+        }
+
+        $Vue->addToCorps(new Vue_Mail_Confirme());
+
+        break;
+
+    case "reinitByToken":
+        $token = \App\Modele\Modele_jeton::Jeton_recuperer_parToken($_SESSION["token"]);
+        $dateFin = \App\Modele\Modele_jeton::Jeton_recuperer_dateFin_parToken($_SESSION["token"]);
+        if(isset($token)and $dateFin>new DateTime()){
+            $Vue->addToCorps(new \App\Vue\Vue_Mail_ChoisirNouveauMdp($_SESSION["token"],""));
+        }else{
+            echo "Erreur de Token";
+        }
+        break;
+
     case "reinitmdp":
 
 

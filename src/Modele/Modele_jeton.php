@@ -46,6 +46,36 @@ class Modele_jeton
         return $tokens;
     }
 
+    static function Jeton_recuperer_parToken(string $token)
+    {
+        $connexionPDO = Singleton_ConnexionPDO::getInstance();
+
+        $requetePreparee = $connexionPDO->prepare(
+            'SELECT *
+                    FROM `token`
+                    WHERE `valeur`=:valeur;');
+
+        $requetePreparee->bindParam('valeur', $token);
+        $requetePreparee->execute(); //$reponse boolean sur l'état de la requête
+        $tokens = $requetePreparee->fetchAll(\PDO::FETCH_ASSOC);
+        return $tokens;
+    }
+
+    static function Jeton_recuperer_dateFin_parToken(string $token)
+    {
+        $connexionPDO = Singleton_ConnexionPDO::getInstance();
+
+        $requetePreparee = $connexionPDO->prepare(
+            'SELECT `dateFin`
+                    FROM `token`
+                    WHERE `valeur`=:valeur;');
+
+        $requetePreparee->bindParam('valeur', $token);
+        $requetePreparee->execute(); //$reponse boolean sur l'état de la requête
+        $tokens = $requetePreparee->fetchAll(\PDO::FETCH_ASSOC);
+        return $tokens;
+    }
+
     static function Jeton_modifier_codeAction(int $id, int $codeAction)
     {
         $connexionPDO = Singleton_ConnexionPDO::getInstance();
@@ -53,7 +83,7 @@ class Modele_jeton
         $requetePreparee = $connexionPDO->prepare(
             'UPDATE `token`
                     SET codeAction = :codeAction
-                    WHERE id = :id;');
+                    WHERE id = :id');
 
 
         $requetePreparee->bindParam('id', $id);
