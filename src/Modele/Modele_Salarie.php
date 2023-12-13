@@ -66,6 +66,23 @@ WHERE idSalarie = :paramidUtilisateur');
             return false;
     }
 
+    static function Salarie_Select_byId_ForJson($idSalarie)
+    {
+        $connexionPDO = Singleton_ConnexionPDO::getInstance();
+        $requetePreparee = $connexionPDO->prepare('
+        select  nom,prenom,mail,roleEntreprise
+        from `salarie`
+        where idSalarie = :idSalarie');
+        $requetePreparee->bindParam('idSalarie', $idSalarie);
+        $reponse = $requetePreparee->execute(); //$reponse boolean sur l'état de la requête
+
+        $tableauReponse = $requetePreparee->fetchAll(PDO::FETCH_ASSOC);
+        if (count($tableauReponse) > 0)
+            return $tableauReponse[0];
+        else
+            return false;
+    }
+
     static function Salarie_Select_byMail($mail)
     {
         $connexionPDO = Singleton_ConnexionPDO::getInstance();

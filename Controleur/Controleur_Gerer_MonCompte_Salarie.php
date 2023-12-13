@@ -71,6 +71,11 @@ switch ($action) {
         $Vue->setEntete(new Vue_Structure_Entete());
         $Vue->addToCorps(new Vue_Connexion_Formulaire_client());
         break;
+    case "RecupInfos":
+        $salarie = Modele_Salarie::Salarie_Select_byId_ForJson($_SESSION["idSalarie"]);
+        $json = json_encode($salarie);
+        echo $json;
+        break;
     default :
         //Cas par défaut: affichage du menu des actions.
         $Vue->setEntete(new Vue_Structure_Entete());
