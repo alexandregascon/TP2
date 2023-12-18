@@ -74,7 +74,13 @@ switch ($action) {
     case "RecupInfos":
         $salarie = Modele_Salarie::Salarie_Select_byId_ForJson($_SESSION["idSalarie"]);
         $json = json_encode($salarie);
-        echo $json;
+        break;
+    case "AnnulerRGPD":
+        \App\Modele\Modele_Utilisateur::utilisateur_desactiver_rgpd($_SESSION["idSalarie"]);
+        session_destroy();
+        unset($_SESSION);
+        $Vue->setEntete(new Vue_Structure_Entete());
+        $Vue->addToCorps(new Vue_Connexion_Formulaire_client());
         break;
     default :
         //Cas par défaut: affichage du menu des actions.

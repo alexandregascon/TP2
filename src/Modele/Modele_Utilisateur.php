@@ -202,6 +202,18 @@ SET motDePasse = :parammotDePasse ');
 
         return $reponse;
     }
+
+    static function utilisateur_desactiver_rgpd($idUtilisateur){
+        $connexionPDO= Singleton_ConnexionPDO::getInstance();
+        $dateJour = \DateTime::createFromFormat("Y-m-d",date("Y-m-d"));
+        $dateStr=$dateJour->format("Y-m-d");
+        $requetePreparee=$connexionPDO->prepare('UPDATE utilisateur SET bAcceptationRGPD = 0 , dateRGPD = null, dateRenonceRGPD = :dateRenonceRGPD  WHERE idUtilisateur = :idUtilisateur');
+        $requetePreparee->bindParam('idUtilisateur', $idUtilisateur);
+        $requetePreparee->bindParam('dateRenonceRGPD',$dateStr);
+        $reponse=$requetePreparee->execute();
+
+        return $reponse;
+    }
     static function Utilisateur_ModifierMdp_activer($idUtilisateur, $activer)
 
     {
