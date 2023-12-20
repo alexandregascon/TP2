@@ -65,6 +65,18 @@ class Vue_Compte_Administration_Gerer extends Vue_Composant
                 </form>
             </td>
         </tr>
+                <tr>
+            <td>
+                <form style='display: contents'>
+                    
+                    <input type='hidden' name='case' value='$this->action'>
+                    
+                    <button type='submit' name='action' value='SupprimerInfos'>
+                        Effacer mes données personnelles
+                    </button>
+                </form>
+            </td>
+        </tr>
     </table>
     $this->msg
     ";
